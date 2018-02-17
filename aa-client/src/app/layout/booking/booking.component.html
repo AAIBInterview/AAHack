@@ -1,0 +1,208 @@
+<div *ngIf="user">            
+  <h2 class="text-muted">To-Do <small>Management</small></h2>
+  <ul class="navbar-nav ml-auto mt-2 mt-md-0">
+        <li class="nav-item dropdown" ngbDropdown>
+            <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                <i class="fa fa-user"></i> {{user.name}} <b class="caret"></b>
+            </a>
+            
+            <a [routerLink]="['/home']" (click)="onLoggedout()"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+            <a (click)="open(edittaskmodal)"><i class="fa fa-fw fa-power-off"></i>Add File</a>
+            
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-lg-4" *ngIf="!showHide">
+            <div class="adduser-panel card card-default">
+                <form role="form" (submit)="onBookSubmit()">
+                    <div class="card-header">
+                        <i class="fa fa-pencil"></i> Add To-Do
+                    </div>
+                    <div class="card-block">
+                        <div class="form-group">
+                           <label>Title:</label>
+                           <input [(ngModel)]="title" 
+                                  name="title" 
+                                  class="form-control" 
+                                  placeholder="Enter Title" 
+                                  type="text" 
+                                  value="" required>
+                        </div>
+                        <div class="form-group">
+                           <label>Description:</label>
+                           <textarea [(ngModel)]="description" 
+                                     name="description" 
+                                     class="form-control" 
+                                     rows="3" 
+                                     placeholder="Enter Description..." 
+                                     type="text" value="" 
+                                     required>
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                           <label>Due Date Time:</label>
+                           <input [(ngModel)]="time" 
+                                  name="time" 
+                                  class="form-control" 
+                                  placeholder="Due Date Time" 
+                                  type="date" 
+                                  value="" required>
+                        </div>                     
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-default btn-sm" (click)="clearForm()">Clear</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- <div class="col-lg-4" *ngIf="showHide">
+            <div class="adduser-panel card card-default">
+                <form role="form" (submit)="onUpdateBook()">
+                    <div class="card-header">
+                        <i class="fa fa-edit"></i> Update To-Do Status
+                    </div>
+                    <div class="card-block">
+                        <div class="form-group">
+                           <label>Title:</label>
+                           <input [(ngModel)]="book1.title" 
+                                  name="title" 
+                                  class="form-control" 
+                                  placeholder="Update Title" 
+                                  type="text" 
+                                  value="" required>
+                        </div>
+                        <div class="form-group">
+                           <label>Description:</label>
+                           <textarea [(ngModel)]="book1.description" 
+                                     name="description" 
+                                     class="form-control" 
+                                     rows="3" 
+                                     placeholder="Update Description..." 
+                                     type="text" 
+                                     value="" required></textarea>
+                        </div>
+                        <div class="form-group">
+                           <label>Due Date Time:</label>
+                           <input [(ngModel)]="book1.time" 
+                                  name="time" 
+                                  class="form-control" 
+                                  placeholder="Time" 
+                                  type="date" 
+                                  value="" required>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-default btn-sm" (click)="cancelEdit()">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div> -->
+        <div class="col-lg-8">
+            <div class="viewuser-panel card card-default">
+                <div class="card-header">
+                    <i class="fa fa-list-alt"></i> All Books
+                </div>
+                <div class="card-block">
+                    <table class="card-block table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th>Assign</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let book of booksData;let i = index;">
+                                <th scope="row">{{i+1}}</th>
+                                <td>{{book.title}}</td>
+                                <td>{{book.description}}</td>
+                                <td>{{book.time}}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs" 
+                                            title="Edit" 
+                                            (click)="editThisBook(book._id, i)" 
+                                            data-title="Edit">
+                                            <i class="fa fa-pencil"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-xs" 
+                                            title="Delete" 
+                                            (click)="deleteThisBook(book._id, i)" 
+                                            data-title="Delete">
+                                            <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-xs" 
+                                            title="Assign" 
+                                            (click)="getUser(book._id, i)" 
+                                            data-title="Assign">
+                                            <i class="fa fa-gavel"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-md-4" *ngIf="assign">
+                <div class="form-area" (submit)="onAssignBook()">
+                    <form role="form">
+                        <br style="clear:both">
+                        <h3 style="margin-bottom: 10px; text-align: center;">Assign Book for {{ projectName }}</h3>
+                        <div class="form-group">
+                            <label>CustomerId:</label>
+                            <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" name="customerId" 
+                                                  [settings]="dropdownSettings" 
+                                                  (onSelect)="onItemSelect($event)"
+                                                  (onDeSelect)="OnItemDeSelect($event)" 
+                                                  (onSelectAll)="onSelectAll($event)" 
+                                                  (onDeSelectAll)="onDeSelectAll($event)">
+                            </angular2-multiselect>
+                        </div>
+                        <input [(ngModel)]="idForAssign" 
+                               type="text" 
+                               class="form-control" 
+                               id="bookData[i]._id" 
+                               name="bookData[i]._id" 
+                               placeholder="bookId"
+                            hidden>
+                        <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Assign Book</button>
+                        <button type="button" id="button" name="button" class="btn btn-primary pull-left" (click)="cancelAssignodo()">Cancel</button>
+                    </form>
+                </div>
+        </div> -->
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <ng-template #edittaskmodal let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Task</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-area">
+                        <form role="form" (submit)="onUpdateTask()">
+                            <div class="form-group">
+                                <input type="file" class="form-control-file" id="uploadedfile" (change)="onChange($event)" />
+                                <img src="{{imgUrl}}" style="max-height: 150px;max-width: 150px;margin-top: 2%;" />
+                            </div>
+                            <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Update Task</button>
+                            <button type="button" id="button" name="button" class="btn btn-primary pull-left" (click)="d('Cross click')">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>
